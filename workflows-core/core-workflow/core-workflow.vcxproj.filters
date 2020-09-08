@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="workflows\status_workflow.hpp">
+      <Filter>workflows</Filter>
+    </ClInclude>
+    <ClInclude Include="workflows\independent_workflow.hpp">
+      <Filter>workflows</Filter>
+    </ClInclude>
+    <ClInclude Include="workflows\group_workflow.hpp">
+      <Filter>workflows</Filter>
+    </ClInclude>
+    <ClInclude Include="workflows\workflow.hpp">
+      <Filter>workflows</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="workflows">
+      <UniqueIdentifier>{bd990abd-c657-40ed-bbeb-d454bfe10009}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
