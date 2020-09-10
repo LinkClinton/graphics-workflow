@@ -1,8 +1,11 @@
 #pragma once
 
-#include "../../workflows-core/core-workflow/workflows/status_workflow.hpp"
+#include "../../references/directx-wrapper/directx12-wrapper/swap_chain.hpp"
+#include "../../workflow-core/workflows/status_workflow.hpp"
 
 #include <string>
+
+using namespace wrapper;
 
 namespace workflows::core {
 
@@ -24,7 +27,22 @@ namespace workflows::core {
 
 		null start(const null& input) override;
 	private:
+		void update(float delta);
+
+		void render(float delta);
+		
+		void initialize_graphics_components();
+		
 		samples_workflow_status mStatus;
+
+		directx12::device mDevice;
+
+		directx12::graphics_command_list mCommandList;
+		directx12::command_allocator mCommandAllocator;
+		directx12::command_queue mCommandQueue;
+
+		directx12::swap_chain mSwapChain;
+		directx12::fence mFence;
 	};
 	
 }

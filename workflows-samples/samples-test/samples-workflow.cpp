@@ -1,5 +1,7 @@
 #include "samples-workflow.hpp"
 
+#include "../../workflow-core/copy_workflow.hpp"
+
 #include <Windows.h>
 #include <chrono>
 
@@ -57,6 +59,8 @@ workflows::core::samples_workflow::samples_workflow(const samples_workflow_statu
 	mStatus.living = true;
 
 	ShowWindow(static_cast<HWND>(mStatus.handle), SW_SHOW);
+
+	initialize_graphics_components();
 }
 
 workflows::core::null workflows::core::samples_workflow::start(const null& input)
@@ -80,8 +84,45 @@ workflows::core::null workflows::core::samples_workflow::start(const null& input
 		auto duration = std::chrono::duration_cast<
 			std::chrono::duration<float>>(time_point::now() - current);
 
+		update(duration.count());
+		render(duration.count());
+		
 		current = time_point::now();
 	}
 	
 	return null();
+}
+
+void workflows::core::samples_workflow::update(float delta)
+{
+}
+
+void workflows::core::samples_workflow::render(float delta)
+{
+	mCommandAllocator->Reset();
+	mCommandList->Reset(mCommandAllocator.get(), nullptr);
+
+	const auto frame_index = mSwapChain->GetCurrentBackBufferIndex();
+	
+	mCommandList->Close();
+	
+	mCommandQueue.execute({ mCommandList });
+
+	mSwapChain.present(true);
+
+	mCommandQueue.wait(mFence);
+}
+
+void workflows::core::samples_workflow::initialize_graphics_components()
+{
+	mDevice = directx12::device::create(D3D_FEATURE_LEVEL_12_0);
+
+	mCommandAllocator = directx12::command_allocator::create(mDevice);
+	mCommandQueue = directx12::command_queue::create(mDevice);
+	mCommandList = directx12::graphics_command_list::create(mDevice, mCommandAllocator);
+
+	mSwapChain = directx12::swap_chain::create(mCommandQueue, mStatus.width,
+		mStatus.height, static_cast<HWND>(mStatus.handle));
+
+	mFence = directx12::fence::create(mDevice, 0);
 }

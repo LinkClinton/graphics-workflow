@@ -155,8 +155,8 @@
     <ClCompile Include="samples-workflow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\workflows-core\core-workflow\core-workflow.vcxproj">
-      <Project>{7c1d3a3d-3a83-4b69-b3fb-edc63f9794e2}</Project>
+    <ProjectReference Include="..\..\references\directx-wrapper\directx12-wrapper\directx12-wrapper.vcxproj">
+      <Project>{79df4b1f-8673-4153-bb01-87bde91d8642}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
