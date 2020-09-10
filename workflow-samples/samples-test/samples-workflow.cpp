@@ -1,14 +1,23 @@
 #include "samples-workflow.hpp"
 
+#include "../../references/directx-wrapper/directx12-wrapper/extensions/imgui.hpp"
 #include "../../workflow-core/copy_workflow.hpp"
+
+#include "imgui_impl_win32.hpp"
 
 #include <Windows.h>
 #include <chrono>
 
+
 using time_point = std::chrono::high_resolution_clock;
+
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT DefaultWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+		return true;
+
 	switch (message)
 	{
 	case WM_DESTROY: {
@@ -60,7 +69,14 @@ workflows::core::samples_workflow::samples_workflow(const samples_workflow_statu
 
 	ShowWindow(static_cast<HWND>(mStatus.handle), SW_SHOW);
 
+	initialize_imgui_components();
 	initialize_graphics_components();
+}
+
+workflows::core::samples_workflow::~samples_workflow()
+{
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 }
 
 workflows::core::null workflows::core::samples_workflow::start(const null& input)
@@ -84,6 +100,8 @@ workflows::core::null workflows::core::samples_workflow::start(const null& input
 		auto duration = std::chrono::duration_cast<
 			std::chrono::duration<float>>(time_point::now() - current);
 
+		ImGui_ImplWin32_NewFrame();
+		
 		update(duration.count());
 		render(duration.count());
 		
@@ -95,6 +113,8 @@ workflows::core::null workflows::core::samples_workflow::start(const null& input
 
 void workflows::core::samples_workflow::update(float delta)
 {
+	directx12::extensions::imgui_context::new_frame();
+	ImGui::NewFrame();
 }
 
 void workflows::core::samples_workflow::render(float delta)
@@ -103,6 +123,21 @@ void workflows::core::samples_workflow::render(float delta)
 	mCommandList->Reset(mCommandAllocator.get(), nullptr);
 
 	const auto frame_index = mSwapChain->GetCurrentBackBufferIndex();
+	const auto render_target_view = mRenderTargetViewHeap.cpu_handle(frame_index);
+	
+	mSwapChain.buffers()[frame_index].barrier(mCommandList,
+		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	mCommandList.clear_render_target_view(render_target_view, { 1,1,1,1 });
+	mCommandList.set_render_targets({ render_target_view });
+	
+	mCommandList.set_descriptor_heaps({ mImGuiDescriptorHeap.get() });
+	
+	ImGui::Render();
+	directx12::extensions::imgui_context::render(mCommandList, ImGui::GetDrawData());
+
+	mSwapChain.buffers()[frame_index].barrier(mCommandList,
+		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 	
 	mCommandList->Close();
 	
@@ -113,9 +148,15 @@ void workflows::core::samples_workflow::render(float delta)
 	mCommandQueue.wait(mFence);
 }
 
+void workflows::core::samples_workflow::initialize_imgui_components()
+{
+	ImGui::CreateContext();
+	ImGui_ImplWin32_Init(mStatus.handle);
+}
+
 void workflows::core::samples_workflow::initialize_graphics_components()
 {
-	mDevice = directx12::device::create(D3D_FEATURE_LEVEL_12_0);
+	mDevice = directx12::device::create(D3D_FEATURE_LEVEL_11_0);
 
 	mCommandAllocator = directx12::command_allocator::create(mDevice);
 	mCommandQueue = directx12::command_queue::create(mDevice);
@@ -125,4 +166,25 @@ void workflows::core::samples_workflow::initialize_graphics_components()
 		mStatus.height, static_cast<HWND>(mStatus.handle));
 
 	mFence = directx12::fence::create(mDevice, 0);
+
+	mRenderTargetViewHeap = directx12::descriptor_heap::create(mDevice, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2);
+	mImGuiDescriptorHeap = directx12::descriptor_heap::create(mDevice, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+
+	for (size_t index = 0; index < mSwapChain.buffers().size(); index++) {
+		D3D12_RENDER_TARGET_VIEW_DESC desc;
+
+		desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+		desc.Format = mSwapChain.format();
+		desc.Texture2D.MipSlice = 0;
+		desc.Texture2D.PlaneSlice = 0;
+
+		mDevice->CreateRenderTargetView(mSwapChain.buffers()[index].get(), &desc, mRenderTargetViewHeap.cpu_handle(index));
+	}
+	
+	directx12::extensions::imgui_context::initialize(
+		mDevice, mImGuiDescriptorHeap,
+		mImGuiDescriptorHeap.cpu_handle(), mImGuiDescriptorHeap.gpu_handle(),
+		mSwapChain.format(), 2);
+
+	directx12::extensions::imgui_context::set_multi_sample(1);
 }

@@ -5,6 +5,6 @@ int main() {
 		"samples-workflow",
 		800, 600
 	});
-
+	
 	workflow.start(workflows::core::null());
 }

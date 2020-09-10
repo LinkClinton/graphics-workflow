@@ -1,5 +1,7 @@
 #pragma once
 
+#include <concepts>
+
 namespace workflows::core {
 
 	struct null {};
@@ -9,6 +11,6 @@ namespace workflows::core {
 	{
 		{ T::output_type };
 		{ T::input_type };
-		{ workflow.start(input) } -> typename T::output_type;
+		{ workflow.start(input) } -> std::convertible_to<typename T::output_type>;
 	};
 }

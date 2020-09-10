@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="imgui_impl_win32.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="samples-workflow.cpp" />
   </ItemGroup>
@@ -160,6 +161,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="imgui_impl_win32.hpp" />
     <ClInclude Include="samples-workflow.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

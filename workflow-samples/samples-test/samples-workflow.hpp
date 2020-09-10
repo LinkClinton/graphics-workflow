@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../references/directx-wrapper/directx12-wrapper/descriptors/descriptor_heap.hpp"
 #include "../../references/directx-wrapper/directx12-wrapper/swap_chain.hpp"
 #include "../../workflow-core/workflows/status_workflow.hpp"
 
@@ -23,13 +24,15 @@ namespace workflows::core {
 	public:
 		explicit samples_workflow(const samples_workflow_status& status);
 
-		~samples_workflow() = default;
+		~samples_workflow();
 
 		null start(const null& input) override;
 	private:
 		void update(float delta);
 
 		void render(float delta);
+
+		void initialize_imgui_components();
 		
 		void initialize_graphics_components();
 		
@@ -41,6 +44,9 @@ namespace workflows::core {
 		directx12::command_allocator mCommandAllocator;
 		directx12::command_queue mCommandQueue;
 
+		directx12::descriptor_heap mRenderTargetViewHeap;
+		directx12::descriptor_heap mImGuiDescriptorHeap;
+		
 		directx12::swap_chain mSwapChain;
 		directx12::fence mFence;
 	};
