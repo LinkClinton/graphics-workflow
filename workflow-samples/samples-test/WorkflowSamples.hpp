@@ -2,15 +2,18 @@
 
 #include "../../references/directx-wrapper/directx12-wrapper/descriptors/descriptor_heap.hpp"
 #include "../../references/directx-wrapper/directx12-wrapper/swap_chain.hpp"
-#include "../../workflow-core/workflows/status_workflow.hpp"
+
+#include "../../workflow-graphics/cores/WorkflowStatus.hpp"
 
 #include <string>
 
 using namespace wrapper;
 
-namespace workflows::core {
+namespace workflows::samples {
 
-	struct samples_workflow_status {
+	using namespace cores;
+	
+	struct SamplesWorkflowsStatus {
 		std::string name = "samples-workflow";
 
 		int width = 0, height = 0;
@@ -20,11 +23,11 @@ namespace workflows::core {
 		bool living = false;
 	};
 	
-	class samples_workflow final : public status_workflow<null, null, samples_workflow_status> {
+	class SamplesWorkflow final : public StatusWorkflow<null, null, SamplesWorkflowsStatus> {
 	public:
-		explicit samples_workflow(const samples_workflow_status& status);
+		explicit SamplesWorkflow(const SamplesWorkflowsStatus& status);
 
-		~samples_workflow();
+		~SamplesWorkflow();
 
 		null start(const null& input) override;
 	private:
@@ -36,7 +39,7 @@ namespace workflows::core {
 		
 		void initialize_graphics_components();
 		
-		samples_workflow_status mStatus;
+		SamplesWorkflowsStatus mStatus;
 
 		directx12::device mDevice;
 
@@ -49,6 +52,10 @@ namespace workflows::core {
 		
 		directx12::swap_chain mSwapChain;
 		directx12::fence mFence;
+
+		directx12::buffer mCpuFrameBuffer;
+
+		std::vector<byte> mCpuFrameData;
 	};
 	
 }

@@ -1,7 +1,8 @@
-#include "samples-workflow.hpp"
+#include "WorkflowSamples.hpp"
 
 #include "../../references/directx-wrapper/directx12-wrapper/extensions/imgui.hpp"
-#include "../../workflow-core/copy_workflow.hpp"
+
+#include "../../workflow-graphics/WorkflowCopy.hpp"
 
 #include "imgui_impl_win32.hpp"
 
@@ -31,7 +32,7 @@ LRESULT DefaultWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-workflows::core::samples_workflow::samples_workflow(const samples_workflow_status& status) :
+workflows::samples::SamplesWorkflow::SamplesWorkflow(const SamplesWorkflowsStatus& status) :
 	mStatus(status)
 {
 	const auto hInstance = GetModuleHandle(nullptr);
@@ -73,13 +74,13 @@ workflows::core::samples_workflow::samples_workflow(const samples_workflow_statu
 	initialize_graphics_components();
 }
 
-workflows::core::samples_workflow::~samples_workflow()
+workflows::samples::SamplesWorkflow::~SamplesWorkflow()
 {
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 }
 
-workflows::core::null workflows::core::samples_workflow::start(const null& input)
+workflows::cores::null workflows::samples::SamplesWorkflow::start(const null& input)
 {
 	auto current = time_point::now();
 
@@ -111,13 +112,13 @@ workflows::core::null workflows::core::samples_workflow::start(const null& input
 	return null();
 }
 
-void workflows::core::samples_workflow::update(float delta)
+void workflows::samples::SamplesWorkflow::update(float delta)
 {
 	directx12::extensions::imgui_context::new_frame();
 	ImGui::NewFrame();
 }
 
-void workflows::core::samples_workflow::render(float delta)
+void workflows::samples::SamplesWorkflow::render(float delta)
 {
 	mCommandAllocator->Reset();
 	mCommandList->Reset(mCommandAllocator.get(), nullptr);
@@ -126,9 +127,18 @@ void workflows::core::samples_workflow::render(float delta)
 	const auto render_target_view = mRenderTargetViewHeap.cpu_handle(frame_index);
 	
 	mSwapChain.buffers()[frame_index].barrier(mCommandList,
-		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_DEST);
+	
+	const copy::CopyWorkflow<copy::CpuMemory, copy::GpuTexture2D> copy_workflow;
 
-	mCommandList.clear_render_target_view(render_target_view, { 1,1,1,1 });
+	copy_workflow.start({
+		mCommandList, mSwapChain.buffers()[frame_index],
+		mCpuFrameBuffer, mCpuFrameData.size(), mCpuFrameData.data()
+	});
+
+	mSwapChain.buffers()[frame_index].barrier(mCommandList,
+		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	
 	mCommandList.set_render_targets({ render_target_view });
 	
 	mCommandList.set_descriptor_heaps({ mImGuiDescriptorHeap.get() });
@@ -148,13 +158,13 @@ void workflows::core::samples_workflow::render(float delta)
 	mCommandQueue.wait(mFence);
 }
 
-void workflows::core::samples_workflow::initialize_imgui_components()
+void workflows::samples::SamplesWorkflow::initialize_imgui_components()
 {
 	ImGui::CreateContext();
 	ImGui_ImplWin32_Init(mStatus.handle);
 }
 
-void workflows::core::samples_workflow::initialize_graphics_components()
+void workflows::samples::SamplesWorkflow::initialize_graphics_components()
 {
 	mDevice = directx12::device::create(D3D_FEATURE_LEVEL_11_0);
 
@@ -187,4 +197,9 @@ void workflows::core::samples_workflow::initialize_graphics_components()
 		mSwapChain.format(), 2);
 
 	directx12::extensions::imgui_context::set_multi_sample(1);
+
+	mCpuFrameBuffer = directx12::buffer::create(mDevice, directx12::resource_info::upload(),
+		mSwapChain.buffers()[0].alignment() * mSwapChain.buffers()[0].height());
+
+	mCpuFrameData = std::vector<byte>(mStatus.width * mStatus.height * directx12::size_of(mSwapChain.format()));
 }

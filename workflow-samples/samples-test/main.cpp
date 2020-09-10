@@ -1,10 +1,10 @@
-#include "samples-workflow.hpp"
+#include "WorkflowSamples.hpp"
 
 int main() {
-	workflows::core::samples_workflow workflow({
+	workflows::samples::SamplesWorkflow workflow({
 		"samples-workflow",
 		800, 600
 	});
 	
-	workflow.start(workflows::core::null());
+	workflow.start(workflows::cores::null());
 }
