@@ -4,17 +4,23 @@
     <Filter Include="cores">
       <UniqueIdentifier>{82049ac1-92bb-430c-8b0e-d747ac79f7a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="rendering">
+      <UniqueIdentifier>{f27ea41c-88f8-475e-9671-fbc5c3b2dc03}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cores\Workflow.hpp">
+    <ClInclude Include="cores\workflow.hpp">
       <Filter>cores</Filter>
     </ClInclude>
-    <ClInclude Include="cores\WorkflowIndependent.hpp">
+    <ClInclude Include="cores\workflow_independent.hpp">
       <Filter>cores</Filter>
     </ClInclude>
-    <ClInclude Include="cores\WorkflowStatus.hpp">
+    <ClInclude Include="cores\workflow_status.hpp">
       <Filter>cores</Filter>
     </ClInclude>
-    <ClInclude Include="WorkflowCopy.hpp" />
+    <ClInclude Include="rendering\workflow_gbuffer.hpp">
+      <Filter>rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="workflow_copy.hpp" />
   </ItemGroup>
 </Project>

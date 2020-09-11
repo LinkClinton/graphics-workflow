@@ -1,4 +1,4 @@
-#include "WorkflowSamples.hpp"
+#include "workflow_samples.hpp"
 
 int main() {
 	workflows::samples::SamplesWorkflow workflow({

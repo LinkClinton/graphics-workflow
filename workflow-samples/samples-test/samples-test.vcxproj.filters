@@ -3,10 +3,10 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="imgui_impl_win32.cpp" />
-    <ClCompile Include="WorkflowSamples.cpp" />
+    <ClCompile Include="workflow_samples.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui_impl_win32.hpp" />
-    <ClInclude Include="WorkflowSamples.hpp" />
+    <ClInclude Include="workflow_samples.hpp" />
   </ItemGroup>
 </Project>

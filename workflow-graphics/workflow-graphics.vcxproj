@@ -18,6 +18,13 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cores\workflow.hpp" />
+    <ClInclude Include="cores\workflow_independent.hpp" />
+    <ClInclude Include="cores\workflow_status.hpp" />
+    <ClInclude Include="rendering\workflow_gbuffer.hpp" />
+    <ClInclude Include="workflow_copy.hpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -141,12 +148,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="cores\Workflow.hpp" />
-    <ClInclude Include="cores\WorkflowIndependent.hpp" />
-    <ClInclude Include="cores\WorkflowStatus.hpp" />
-    <ClInclude Include="WorkflowCopy.hpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

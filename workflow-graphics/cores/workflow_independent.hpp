@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Workflow.hpp"
+#include "workflow.hpp"
 
 namespace workflows::cores {
 

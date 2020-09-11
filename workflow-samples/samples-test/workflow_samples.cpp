@@ -1,8 +1,8 @@
-#include "WorkflowSamples.hpp"
+#include "workflow_samples.hpp"
 
 #include "../../references/directx-wrapper/directx12-wrapper/extensions/imgui.hpp"
 
-#include "../../workflow-graphics/WorkflowCopy.hpp"
+#include "../../workflow-graphics/workflow_copy.hpp"
 
 #include "imgui_impl_win32.hpp"
 
@@ -129,7 +129,7 @@ void workflows::samples::SamplesWorkflow::render(float delta)
 	mSwapChain.buffers()[frame_index].barrier(mCommandList,
 		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_DEST);
 	
-	const copy::CopyWorkflow<copy::CpuMemory, copy::GpuTexture2D> copy_workflow;
+	const CopyWorkflow<CpuMemory, GpuTexture2D> copy_workflow;
 
 	copy_workflow.start({
 		mCommandList, mSwapChain.buffers()[frame_index],

@@ -3,11 +3,11 @@
 #include "../references/directx-wrapper/directx12-wrapper/resources/texture2d.hpp"
 #include "../references/directx-wrapper/directx12-wrapper/resources/buffer.hpp"
 
-#include "cores/WorkflowIndependent.hpp"
+#include "cores/workflow_independent.hpp"
 
 using namespace wrapper;
 
-namespace workflows::copy {
+namespace workflows {
 
 	using namespace cores;
 	

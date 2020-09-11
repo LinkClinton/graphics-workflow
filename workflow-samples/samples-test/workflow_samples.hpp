@@ -3,7 +3,7 @@
 #include "../../references/directx-wrapper/directx12-wrapper/descriptors/descriptor_heap.hpp"
 #include "../../references/directx-wrapper/directx12-wrapper/swap_chain.hpp"
 
-#include "../../workflow-graphics/cores/WorkflowStatus.hpp"
+#include "../../workflow-graphics/cores/workflow_status.hpp"
 
 #include <string>
 
