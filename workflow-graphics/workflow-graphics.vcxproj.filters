@@ -22,5 +22,8 @@
       <Filter>rendering</Filter>
     </ClInclude>
     <ClInclude Include="workflow_copy.hpp" />
+    <ClInclude Include="rendering\workflow_line.hpp">
+      <Filter>rendering</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

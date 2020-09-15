@@ -23,6 +23,7 @@
     <ClInclude Include="cores\workflow_independent.hpp" />
     <ClInclude Include="cores\workflow_status.hpp" />
     <ClInclude Include="rendering\workflow_gbuffer.hpp" />
+    <ClInclude Include="rendering\workflow_line.hpp" />
     <ClInclude Include="workflow_copy.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
