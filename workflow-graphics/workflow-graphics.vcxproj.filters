@@ -7,6 +7,12 @@
     <Filter Include="rendering">
       <UniqueIdentifier>{f27ea41c-88f8-475e-9671-fbc5c3b2dc03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{d0ddca26-bfc0-4987-ade4-18690bfeb3e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\shaders">
+      <UniqueIdentifier>{e6c671e5-25b9-404c-bae8-8ce4f96b30bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cores\workflow.hpp">
@@ -25,5 +31,13 @@
     <ClInclude Include="rendering\workflow_line.hpp">
       <Filter>rendering</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\workflow_line.hlsl">
+      <Filter>resources\shaders</Filter>
+    </None>
+    <None Include="resources\shaders\fix_resharper_error.hlsl">
+      <Filter>resources\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

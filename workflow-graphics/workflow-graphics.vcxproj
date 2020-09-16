@@ -26,6 +26,16 @@
     <ClInclude Include="rendering\workflow_line.hpp" />
     <ClInclude Include="workflow_copy.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\fix_resharper_error.hlsl">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\workflow_line.hlsl">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
