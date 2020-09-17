@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cores\workflow.hpp">
-      <Filter>cores</Filter>
-    </ClInclude>
     <ClInclude Include="cores\workflow_independent.hpp">
       <Filter>cores</Filter>
     </ClInclude>
@@ -33,6 +30,9 @@
     </ClInclude>
     <ClInclude Include="resources\workflow_shaders_file.hpp">
       <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="cores\workflow.hpp">
+      <Filter>cores</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
