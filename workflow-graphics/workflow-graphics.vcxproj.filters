@@ -31,6 +31,9 @@
     <ClInclude Include="rendering\workflow_line.hpp">
       <Filter>rendering</Filter>
     </ClInclude>
+    <ClInclude Include="resources\workflow_shaders_file.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\workflow_line.hlsl">
@@ -38,6 +41,9 @@
     </None>
     <None Include="resources\shaders\fix_resharper_error.hlsl">
       <Filter>resources\shaders</Filter>
+    </None>
+    <None Include="resources\generate_shaders.json">
+      <Filter>resources</Filter>
     </None>
   </ItemGroup>
 </Project>

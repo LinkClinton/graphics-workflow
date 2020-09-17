@@ -24,9 +24,11 @@
     <ClInclude Include="cores\workflow_status.hpp" />
     <ClInclude Include="rendering\workflow_gbuffer.hpp" />
     <ClInclude Include="rendering\workflow_line.hpp" />
+    <ClInclude Include="resources\workflow_shaders_file.hpp" />
     <ClInclude Include="workflow_copy.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\generate_shaders.json" />
     <None Include="resources\shaders\fix_resharper_error.hlsl">
       <FileType>Document</FileType>
     </None>
@@ -113,6 +115,9 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>cs2h.exe ./resources/generate_shaders.json</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -129,6 +134,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>cs2h.exe ./resources/generate_shaders.json</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -142,6 +150,9 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>cs2h.exe ./resources/generate_shaders.json</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -158,6 +169,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>cs2h.exe ./resources/generate_shaders.json</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -3,6 +3,7 @@
 #include "../../references/directx-wrapper/directx12-wrapper/descriptors/descriptor_heap.hpp"
 #include "../../references/directx-wrapper/directx12-wrapper/swap_chain.hpp"
 
+#include "../../workflow-graphics/rendering/workflow_line.hpp"
 #include "../../workflow-graphics/cores/workflow_status.hpp"
 
 #include <string>
@@ -41,6 +42,8 @@ namespace workflows::samples {
 		
 		SamplesWorkflowsStatus mStatus;
 
+		std::shared_ptr<rendering::LineWorkflow> mLineWorkflow;
+		
 		directx12::device mDevice;
 
 		directx12::graphics_command_list mCommandList;

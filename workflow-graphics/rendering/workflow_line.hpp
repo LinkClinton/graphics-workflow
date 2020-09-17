@@ -6,6 +6,7 @@
 #include "../../references/directx-wrapper/directx12-wrapper/resources/texture2d.hpp"
 #include "../../references/directx-wrapper/directx12-wrapper/enums/pixel_format.hpp"
 
+#include "../resources/workflow_shaders_file.hpp"
 #include "../cores/workflow_status.hpp"
 
 #include <vector>
@@ -82,11 +83,9 @@ namespace workflows::rendering {
 
 		mRootSignature = directx12::root_signature::create(mStatus.device, mRootSignatureInfo);
 
-		const char* shader = "";
+		mVertShader = directx12::shader_code::create(shaders::workflow_line_vert_shader);
+		mFragShader = directx12::shader_code::create(shaders::workflow_line_frag_shader);
 		
-		mVertShader = directx12::shader_code::create_from_source(shader, "vs_main", "vs_5_1");
-		mFragShader = directx12::shader_code::create_from_source(shader, "ps_main", "ps_5_1");
-
 		mInputAssemblyInfo
 			.add_input_element("POSITION", DXGI_FORMAT_R32G32B32_FLOAT)
 			.add_input_element("COLOR", DXGI_FORMAT_R32G32B32A32_FLOAT);
@@ -97,10 +96,8 @@ namespace workflows::rendering {
 
 		mDepthStencilInfo.set_depth_enable(false);
 
-		mBlendInfo.set_render_target({ false }, 0);
-
 		mGraphicsPipelineInfo
-			.set_primitive_type(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE)
+			.set_primitive_type(D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE)
 			.set_root_signature(mRootSignature)
 			.set_vert_shader(mVertShader)
 			.set_frag_shader(mFragShader)
@@ -152,7 +149,8 @@ namespace workflows::rendering {
 		command_list.set_view_ports({
 			{ 0, 0,
 				static_cast<float>(input.render_target.width()),
-				static_cast<float>(input.render_target.height())
+				static_cast<float>(input.render_target.height()),
+				0, 1
 			}
 		});
 
@@ -168,7 +166,9 @@ namespace workflows::rendering {
 			&input.view_matrix, 16, 0);
 
 		command_list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-		command_list->DrawInstanced(input.lines.size() * 2, 1, 0, 0);
+		command_list->DrawInstanced(
+			static_cast<UINT>(input.lines.size() * 2),
+			1, 0, 0);
 
 		return { input.render_target };
 	}

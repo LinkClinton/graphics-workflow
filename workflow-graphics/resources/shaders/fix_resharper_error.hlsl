@@ -16,6 +16,7 @@
 #define SV_TARGET
 
 #define POSITION
+#define COLOR
 
 #define SHADER_STRUCTURED_BUFFER_DEFINE(type, name, base, space) type name[1]
 #define SHADER_CONSTANT_BUFFER_DEFINE(type, name, base, space) type name

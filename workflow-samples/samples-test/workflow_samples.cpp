@@ -127,17 +127,31 @@ void workflows::samples::SamplesWorkflow::render(float delta)
 	const auto render_target_view = mRenderTargetViewHeap.cpu_handle(frame_index);
 	
 	mSwapChain.buffers()[frame_index].barrier(mCommandList,
-		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_COPY_DEST);
+		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	mCommandList.clear_render_target_view(render_target_view, { 1,1,1,1 });
 	
-	const CopyWorkflow<CpuMemory, GpuTexture2D> copy_workflow;
+	std::vector<rendering::LineWorkflowDrawCall> lines;
 
-	copy_workflow.start({
-		mCommandList, mSwapChain.buffers()[frame_index],
-		mCpuFrameBuffer, mCpuFrameData.size(), mCpuFrameData.data()
-	});
+	lines.push_back({
+		vector3(0, 0, 0), vector3(100, 100, 0),
+		vector4(1,0,0,1) });
+	lines.push_back({
+	vector3(100, 100, 0), vector3(200, 100, 0),
+	vector4(1,0,0,1) });
 
-	mSwapChain.buffers()[frame_index].barrier(mCommandList,
-		D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	const matrix4x4 view = glm::transpose(glm::ortho(0.f, 
+		static_cast<float>(mStatus.width),
+		static_cast<float>(mStatus.height), 0.f));
+
+	const rendering::LineWorkflowInput line_workflow_input = {
+		lines, mCommandList, mRenderTargetViewHeap,
+		mSwapChain.buffers()[frame_index],
+		view,
+		frame_index
+	};
+	
+	mLineWorkflow->start(line_workflow_input);
 	
 	mCommandList.set_render_targets({ render_target_view });
 	
@@ -202,4 +216,11 @@ void workflows::samples::SamplesWorkflow::initialize_graphics_components()
 		mSwapChain.buffers()[0].alignment() * mSwapChain.buffers()[0].height());
 
 	mCpuFrameData = std::vector<byte>(mStatus.width * mStatus.height * directx12::size_of(mSwapChain.format()));
+
+	rendering::LineWorkflowStatus line_workflow_status;
+
+	line_workflow_status.device = mDevice;
+	line_workflow_status.format = mSwapChain.format();
+	
+	mLineWorkflow = std::make_shared<rendering::LineWorkflow>(line_workflow_status);
 }

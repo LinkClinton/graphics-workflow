@@ -1,0 +1,21 @@
+{
+  "directory": "./resources",
+  "filename": "workflow_shaders_file",
+  "name_of_namespace": "workflows::shaders",
+  "shaders": [
+    {
+      "macros": [ { "__HLSL_SHADER__": 1 } ],
+      "filename": "./resources/shaders/workflow_line.hlsl",
+      "variable": "workflow_line_vert_shader",
+      "version": "vs_5_1",
+      "entry": "vs_main"
+    },
+    {
+      "macros": [ { "__HLSL_SHADER__": 1 } ],
+      "filename": "./resources/shaders/workflow_line.hlsl",
+      "variable": "workflow_line_frag_shader",
+      "version": "ps_5_1",
+      "entry": "ps_main"
+    }
+  ]
+}
