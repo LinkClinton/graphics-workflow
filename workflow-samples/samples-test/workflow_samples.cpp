@@ -9,7 +9,6 @@
 #include <Windows.h>
 #include <chrono>
 
-
 using time_point = std::chrono::high_resolution_clock;
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -195,14 +194,10 @@ void workflows::samples::SamplesWorkflow::initialize_graphics_components()
 	mImGuiDescriptorHeap = directx12::descriptor_heap::create(mDevice, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
 
 	for (size_t index = 0; index < mSwapChain.buffers().size(); index++) {
-		D3D12_RENDER_TARGET_VIEW_DESC desc;
-
-		desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-		desc.Format = mSwapChain.format();
-		desc.Texture2D.MipSlice = 0;
-		desc.Texture2D.PlaneSlice = 0;
-
-		mDevice->CreateRenderTargetView(mSwapChain.buffers()[index].get(), &desc, mRenderTargetViewHeap.cpu_handle(index));
+		mDevice.create_render_target_view(
+			directx12::resource_view::render_target2d(mSwapChain.format()),
+			mRenderTargetViewHeap.cpu_handle(index),
+			mSwapChain.buffers()[index]);
 	}
 	
 	directx12::extensions::imgui_context::initialize(
