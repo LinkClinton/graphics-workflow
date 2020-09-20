@@ -3,8 +3,10 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="workflow_lab1.cpp" />
+    <ClCompile Include="line.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="workflow_lab1.hpp" />
+    <ClInclude Include="line.hpp" />
   </ItemGroup>
 </Project>

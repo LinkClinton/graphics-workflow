@@ -13,6 +13,9 @@
     <Filter Include="resources\shaders">
       <UniqueIdentifier>{e6c671e5-25b9-404c-bae8-8ce4f96b30bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="clipping">
+      <UniqueIdentifier>{bcfcf931-b1b4-447c-bc22-7ea086898ac8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cores\workflow_independent.hpp">
