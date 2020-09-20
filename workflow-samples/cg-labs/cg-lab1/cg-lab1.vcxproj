@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="clipping_rectangle.cpp" />
     <ClCompile Include="line.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="workflow_lab1.cpp" />
@@ -156,7 +157,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="clipping_rectangle.hpp" />
     <ClInclude Include="line.hpp" />
+    <ClInclude Include="workflow_generate_line.hpp" />
     <ClInclude Include="workflow_lab1.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

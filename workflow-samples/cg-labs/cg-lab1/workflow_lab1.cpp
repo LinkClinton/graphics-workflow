@@ -6,9 +6,16 @@ workflows::labs::Lab1Workflow::Lab1Workflow(const LabWorkflowStatus& status) : L
 {
 	initialize_graphics_components();
 
-	mLines.push_back({ "line0", vector2(100, 100), vector2(200, 200) });
-	mLines.push_back({ "line1", vector2(100, 200), vector2(200, 100) });
+	mGenerateLineWorkflow = std::make_shared<GenerateLineWorkflow>(0);
+	
+	mClippingRectangle.set_rectangle(100, 100, mStatus.width - 200.f, mStatus.height - 100.f);
 
+	mLines = mGenerateLineWorkflow->start({
+		100, vector4(0, 0, 0, 1),
+		vector2(0, 0),
+		vector2(mStatus.width, mStatus.height)
+	}).lines;
+	
 	mMaxLineID = mLines.size();
 }
 
@@ -60,13 +67,28 @@ void workflows::labs::Lab1Workflow::update(float delta)
 		mLines.push_back({ "line" + std::to_string(mMaxLineID++), position_begin, position_end });
 	
 	ImGui::Separator();
+	ImGui::Checkbox("render clipped line", &mRenderClippedLine);
 
 	ImGui::End();
 
-	mLineDrawCalls.resize(mLines.size());
-	
-	for (size_t index = 0; index < mLines.size(); index++) 
-		mLineDrawCalls[index] = to_draw_call(mLines[index]);
+	mLinesClipped = mClippingWorkflow->start({ 
+		mLines,
+		mClippingRectangle.left(),
+		mClippingRectangle.top(),
+		mClippingRectangle.right(),
+		mClippingRectangle.bottom()}).lines;
+
+	if (!mRenderClippedLine) {
+		mLineDrawCalls.resize(mLines.size());
+
+		for (size_t index = 0; index < mLines.size(); index++)
+			mLineDrawCalls[index] = to_draw_call(mLines[index]);
+	}else {
+		mLineDrawCalls.resize(mLinesClipped.size());
+
+		for (size_t index = 0; index < mLinesClipped.size(); index++)
+			mLineDrawCalls[index] = to_draw_call(mLinesClipped[index]);
+	}
 }
 
 void workflows::labs::Lab1Workflow::render(float delta)
@@ -90,6 +112,8 @@ void workflows::labs::Lab1Workflow::render(float delta)
 		static_cast<float>(mStatus.height), 0.f)),
 		frame_index
 		});
+
+	mClippingRectangle.draw_self(vector4(0.5, 0, 0, 1));
 	
 	mCommandList.set_render_targets({ render_target_view });
 
@@ -146,4 +170,6 @@ void workflows::labs::Lab1Workflow::initialize_graphics_components()
 		rendering::LineWorkflowStatus{
 			mSwapChain.format(), mDevice
 		});
+
+	mClippingWorkflow = std::make_shared<clipping::LiangBarskyClippingWorkflow<Line>>();
 }

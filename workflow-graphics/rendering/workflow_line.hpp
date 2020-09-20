@@ -115,6 +115,8 @@ namespace workflows::rendering {
 	inline StatusWorkflow<LineWorkflowInput, LineWorkflowOutput, LineWorkflowStatus>::output_type LineWorkflow::start(
 		const input_type& input)
 	{
+		if (input.lines.empty()) return { input.render_target };
+		
 		// sizeof vertex = 7 * 4, number of vertex = 2
 		const auto size_of_lines = input.lines.size() * 2 * 7 * 4;
 

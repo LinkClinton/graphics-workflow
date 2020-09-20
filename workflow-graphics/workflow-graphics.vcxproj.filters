@@ -37,6 +37,9 @@
     <ClInclude Include="cores\workflow.hpp">
       <Filter>cores</Filter>
     </ClInclude>
+    <ClInclude Include="clipping\workflow_clipping_liang_barsky.hpp">
+      <Filter>clipping</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\workflow_line.hlsl">

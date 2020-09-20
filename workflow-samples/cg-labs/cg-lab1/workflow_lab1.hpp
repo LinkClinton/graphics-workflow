@@ -1,9 +1,12 @@
 #pragma once
 
+#include "../../../workflow-graphics/clipping/workflow_clipping_liang_barsky.hpp"
 #include "../../../workflow-graphics/rendering/workflow_line.hpp"
+
 #include "../cg-lab0/workflow_lab.hpp"
 
-#include "line.hpp"
+#include "workflow_generate_line.hpp"
+#include "clipping_rectangle.hpp"
 
 namespace workflows::labs {
 
@@ -31,16 +34,23 @@ namespace workflows::labs {
 		directx12::swap_chain mSwapChain;
 		directx12::fence mFence;
 
+		ClippingRectangle mClippingRectangle;
+
+		std::shared_ptr<GenerateLineWorkflow> mGenerateLineWorkflow;
+		std::shared_ptr<clipping::LiangBarskyClippingWorkflow<Line>> mClippingWorkflow;
 		std::shared_ptr<rendering::LineWorkflow> mLineWorkflow;
 
 		std::vector<rendering::LineWorkflowDrawCall> mLineDrawCalls;
-		
+
+		std::vector<Line> mLinesClipped;
 		std::vector<Line> mLines;
 
 		std::string mSelectedLine;
 		int mSelectedIndex = -1;
 
 		size_t mMaxLineID;
+
+		bool mRenderClippedLine = true;
 	};
 	
 }
