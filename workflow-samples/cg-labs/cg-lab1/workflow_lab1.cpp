@@ -11,7 +11,7 @@ workflows::labs::Lab1Workflow::Lab1Workflow(const LabWorkflowStatus& status) : L
 	mClippingRectangle.set_rectangle(100, 100, mStatus.width - 200.f, mStatus.height - 100.f);
 
 	mLines = mGenerateLineWorkflow->start({
-		100, vector4(0, 0, 0, 1),
+		200, vector4(0, 0, 0, 1),
 		vector2(0, 0),
 		vector2(mStatus.width, mStatus.height)
 	}).lines;
@@ -67,8 +67,23 @@ void workflows::labs::Lab1Workflow::update(float delta)
 		mLines.push_back({ "line" + std::to_string(mMaxLineID++), position_begin, position_end });
 	
 	ImGui::Separator();
-	ImGui::Checkbox("render clipped line", &mRenderClippedLine);
 
+	ImGui::Checkbox("render clipped line", &mRenderClippedLine);
+	
+	static int count_of_lines = static_cast<int>(mMaxLineID);
+	
+	ImGui::InputInt("count", &count_of_lines);
+
+	if (ImGui::Button("generate", ImVec2(button_width, 0))) {
+		mLines = mGenerateLineWorkflow->start({
+		static_cast<size_t>(count_of_lines), vector4(0, 0, 0, 1),
+		vector2(0, 0),
+		vector2(mStatus.width, mStatus.height)
+			}).lines;
+
+		mMaxLineID = mLines.size();
+	}
+	
 	ImGui::End();
 
 	mLinesClipped = mClippingWorkflow->start({ 

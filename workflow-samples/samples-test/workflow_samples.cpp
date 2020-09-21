@@ -2,6 +2,7 @@
 
 #include "../../references/directx-wrapper/directx12-wrapper/extensions/imgui.hpp"
 
+#include "../../workflow-graphics/rendering/workflow_gbuffer.hpp"
 #include "../../workflow-graphics/workflow_copy.hpp"
 
 #include "imgui_impl_win32.hpp"
@@ -113,6 +114,22 @@ workflows::cores::null workflows::samples::SamplesWorkflow::start(const null& in
 
 void workflows::samples::SamplesWorkflow::update(float delta)
 {
+	rendering::GBufferWorkflowStatus status;
+
+	status.input.property_from_vertex.push_back({ rendering::GBufferWorkflowBaseType::float3, "Position", 0 });
+	status.input.property_from_vertex.push_back({ rendering::GBufferWorkflowBaseType::float4, "Color", 0 });
+
+	status.input.property_from_buffer.push_back({ rendering::GBufferWorkflowBaseType::float4, "unknown" });
+
+	status.output.depth_format = rendering::GBufferWorkflowBaseType::float4;
+	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float4);
+	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float4);
+
+	status.device = mDevice;
+	status.enable_depth = true;
+	
+	rendering::GBufferWorkflow gbuffer(status);
+	
 	directx12::extensions::imgui_context::new_frame();
 	ImGui::NewFrame();
 }

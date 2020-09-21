@@ -1,6 +1,6 @@
 #include "workflow_samples.hpp"
 
-int main() {
+int main() {	
 	workflows::samples::SamplesWorkflow workflow({
 		"samples-workflow",
 		800, 600
