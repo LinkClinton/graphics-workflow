@@ -40,6 +40,9 @@
     <ClInclude Include="clipping\workflow_clipping_liang_barsky.hpp">
       <Filter>clipping</Filter>
     </ClInclude>
+    <ClInclude Include="clipping\workflow_clipping_sutherland_hodgman.hpp">
+      <Filter>clipping</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\workflow_line.hlsl">

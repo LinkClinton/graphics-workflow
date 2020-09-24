@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cg-lab0", "workflow-samples
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cg-lab1", "workflow-samples\cg-labs\cg-lab1\cg-lab1.vcxproj", "{52C3AE86-5600-4685-AC51-BFFBEA158453}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cg-lab2", "workflow-samples\cg-labs\cg-lab2\cg-lab2.vcxproj", "{71E482E8-71BD-4DCF-9E1C-4785E27C1BC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -69,6 +71,14 @@ Global
 		{52C3AE86-5600-4685-AC51-BFFBEA158453}.Release|x64.Build.0 = Release|x64
 		{52C3AE86-5600-4685-AC51-BFFBEA158453}.Release|x86.ActiveCfg = Release|Win32
 		{52C3AE86-5600-4685-AC51-BFFBEA158453}.Release|x86.Build.0 = Release|Win32
+		{71E482E8-71BD-4DCF-9E1C-4785E27C1BC9}.Debug|x64.ActiveCfg = Debug|x64
+		{71E482E8-71BD-4DCF-9E1C-4785E27C1BC9}.Debug|x64.Build.0 = Debug|x64
+		{71E482E8-71BD-4DCF-9E1C-4785E27C1BC9}.Debug|x86.ActiveCfg = Debug|Win32
+		{71E482E8-71BD-4DCF-9E1C-4785E27C1BC9}.Debug|x86.Build.0 = Debug|Win32
+		{71E482E8-71BD-4DCF-9E1C-4785E27C1BC9}.Release|x64.ActiveCfg = Release|x64
+		{71E482E8-71BD-4DCF-9E1C-4785E27C1BC9}.Release|x64.Build.0 = Release|x64
+		{71E482E8-71BD-4DCF-9E1C-4785E27C1BC9}.Release|x86.ActiveCfg = Release|Win32
+		{71E482E8-71BD-4DCF-9E1C-4785E27C1BC9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,6 +90,7 @@ Global
 		{4CA42756-2F3A-4BCC-8475-5D55911099F6} = {AA2CF937-9973-4B8F-9D41-C8FCC17498F8}
 		{71ACFC0B-D487-430B-99F7-28A90640618A} = {4CA42756-2F3A-4BCC-8475-5D55911099F6}
 		{52C3AE86-5600-4685-AC51-BFFBEA158453} = {4CA42756-2F3A-4BCC-8475-5D55911099F6}
+		{71E482E8-71BD-4DCF-9E1C-4785E27C1BC9} = {4CA42756-2F3A-4BCC-8475-5D55911099F6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2DD5B8C3-7CB8-4729-8875-05AB71EF1981}
