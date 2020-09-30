@@ -19,8 +19,8 @@ namespace workflows::rendering {
 
 	/*
 	 * GBufferWorkflow is StatusWorkflow, it has status that config the input format and output format.
-	 * For input format, it will config the input property from vertex buffer and constant buffer
-	 * A input property has a name and can come from vertex buffer or constant buffer
+	 * For input format, it will config the input property from vertex buffer
+	 * A input property has a name and come from vertex buffer
 	 * For output format, it will config the output property.
 	 * A output property is an expression of input property
 	 *
@@ -29,29 +29,30 @@ namespace workflows::rendering {
 	 * For input of GBufferWorkflow, it will has four main components :
 	 *	- draw calls component, tell the workflow how to invoke the draw calls
 	 *	- transform component, the transform matrix of instance
-	 *	- array of user defined data 
 	 * All components are independent for the better memory layout.
 	 *
-	 * Format of user defined data :
-	 *	- some floats, uints and so on.
-	 *	- some uints that indicate which texture will use
-	 * Each sub component of user defined data is corresponding to a input property
-	 *
-	 * The packed rule of user defined data is same as
-	 * https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-packing-rules 
-	 *
 	 * Type Limit of input property and output property
-	 * For input property, the type should be uint32, float, float2, float3, float4 and some base type.
+	 * For input property, the type should be uint, float1, float2, float3, float4 and some base type.
 	 *
-	 * Special Input Property :
-	 *	- Position : From Vertex Buffer indicate the position of vertex
-	 *	- Texcoord : From Vertex Buffer indicate the texcoord of vertex
-	 *	- Normal : From Vertex Buffer indicate the normal of vertex
+	 * Format of Transform Component :
+	 * - Transform Matrix4x4 from local space to world space.
+	 * - Transform Matrix4x4 from world space to camera space.
+	 * - Transform Matrix4x4 from camera space to projection space.
 	 *
-	 * Special Output Property :
-	 * - Identity : instance index, uint type.
-	 * - Depth : depth value, float type(only output to depth buffer).
+	 * Input Property Description:
+	 *	- Position : indicate the position of vertex, float3 type.
+	 *	- Texcoord : indicate the texcoord of vertex, float3 type
+	 *	- Normal : indicate the normal of vertex, float3 type
 	 *
+	 * Output Property Description:
+	 * - PositionCameraSpace : position in camera space, float3 type.
+	 * - PositionWorldSpace : position in world space, float3 type.
+	 * - NormalCameraSpace : normal in camera space, float3 type. (require Normal Input Property)
+	 * - NormalWorldSpace : normal in world space, float3 type. (require Normal Input Property)
+	 * - Texcoord : texcoord, float3 type (require Texcoord Input Property).
+	 * - Depth : depth value, float1 type(only output to depth buffer).
+	 * - Identity : instance index, uint1 type.
+	 * 
 	 * A GBufferWorkflow must have Position Input Property.
 	 *
 	 * the output property will output.
@@ -61,10 +62,12 @@ namespace workflows::rendering {
 		float4, float3, float2, float1,
 		uint4, uint3, uint2, uint1
 	};
-
+	
 	DXGI_FORMAT to_dxgi_format(const GBufferWorkflowBaseType& type);
 
 	std::string to_string(const GBufferWorkflowBaseType& type);
+
+	GBufferWorkflowBaseType get_type_by_name(const std::string& name);
 	
 	/*
 	 * GBufferWorkflowOutputMapping will mapping a property to a texture
@@ -100,8 +103,7 @@ namespace workflows::rendering {
 	};
 
 	struct GBufferWorkflowInputConfig {
-		std::vector<GBufferWorkflowInputVertex> property_from_vertex;
-		std::vector<GBufferWorkflowInputBuffer> property_from_buffer;
+		std::vector<GBufferWorkflowInputVertex> properties;
 	};
 
 	struct GBufferWorkflowStatus {
@@ -128,8 +130,7 @@ namespace workflows::rendering {
 	 * The draw_calls indicate the draw commands we will run(it supports one draw call more instances)
 	 * and the instance id from 0 to the sum of GBufferWorkflowDrawCall::instance_count
 	 *
-	 * transform is the buffer of array of matrix(float4x4) and we use instance_id as index
-	 * data is the user defined data structure(the layout of it we had introduced).
+	 * transform is the buffer of array of Transform Component(float4x4 * 3) and we use instance_id as index
 	 */
 	struct GBufferWorkflowInput {
 		std::vector<GBufferWorkflowDrawCall> draw_calls;
@@ -142,7 +143,6 @@ namespace workflows::rendering {
 
 		directx12::buffer index_buffer;
 		directx12::buffer transform;
-		directx12::buffer data;
 		
 		uint32 slot = 0;
 	};
@@ -208,6 +208,25 @@ namespace workflows::rendering {
 		}
 	}
 
+	inline GBufferWorkflowBaseType get_type_by_name(const std::string& name)
+	{
+		static std::unordered_map<std::string, GBufferWorkflowBaseType> mapping = {
+			{ "PositionCameraSpace", GBufferWorkflowBaseType::float3 },
+			{ "PositionWorldSpace", GBufferWorkflowBaseType::float3 },
+			{ "Position", GBufferWorkflowBaseType::float3 },
+			{ "NormalCameraSpace", GBufferWorkflowBaseType::float3 },
+			{ "NormalWorldSpace", GBufferWorkflowBaseType::float3 },
+			{ "Normal", GBufferWorkflowBaseType::float3},
+			{ "Texcoord", GBufferWorkflowBaseType::float3 },
+			{ "Depth", GBufferWorkflowBaseType::float1 },
+			{ "Identity", GBufferWorkflowBaseType::uint1 }
+		};
+
+		if (mapping.find(name) == mapping.end()) throw "Invalid Name.";
+
+		return mapping.find(name)->second;
+	}
+
 	inline GBufferWorkflow::GBufferWorkflow(const GBufferWorkflowStatus& status) : mStatus(status)
 	{
 		mRootSignatureInfo
@@ -216,7 +235,7 @@ namespace workflows::rendering {
 		
 		mRootSignature = directx12::root_signature::create(mStatus.device, mRootSignatureInfo);
 		
-		for (const auto& input_property : mStatus.input.property_from_vertex) {
+		for (const auto& input_property : mStatus.input.properties) {
 			mInputAssemblyInfo.add_input_element(
 				input_property.name, to_dxgi_format(input_property.type), 
 				input_property.slot);
@@ -227,7 +246,7 @@ namespace workflows::rendering {
 		printf("%s\n", shader.c_str());
 		
 		mVertShader = directx12::shader_code::create_from_source(shader, "vs_main", "vs_5_1");
-		mFragShader = directx12::shader_code::create_from_source(shader, "ps_main", "ps_5_1");
+		mFragShader = directx12::shader_code::create_from_source(shader, "fs_main", "ps_5_1");
 		
 		mRasterizationInfo
 			.set_fill_mode(D3D12_FILL_MODE_SOLID)
@@ -262,22 +281,29 @@ namespace workflows::rendering {
 	{
 		directx12::shader_creator creator;
 
-		creator.define_structure({ {"", "matrix","float4x4"} }, "Transform");
+		creator.define_structure({
+			{ "", "local_to_world","float4x4"},
+			{ "", "world_to_camera", "float4x4"},
+			{ "", "camera_to_proj", "float4x4"}
+		}, "TransformComponent");
 		
-		std::vector<directx12::shader_variable> user_defined_data;
 		std::vector<directx12::shader_variable> vs_output;
 		std::vector<directx12::shader_variable> fs_output;
 		std::vector<directx12::shader_variable> vs_input;
 
-		for (const auto& property : status.input.property_from_buffer) 
-			user_defined_data.push_back({ "", property.name, to_string(property.type) });
-
-		for (const auto& property : status.input.property_from_vertex) {
-			vs_output.push_back({ property.name, property.name, to_string(property.type) });
+		for (const auto& property : status.input.properties) 
 			vs_input.push_back({ property.name, property.name, to_string(property.type) });
+
+		vs_input.push_back({ "SV_InstanceID", "index", "uint" });
+		
+		for (const auto& property : status.output.mappings) {
+			if (property.first == "Identity") continue;
+			
+			vs_output.push_back({ property.first, property.first, to_string(get_type_by_name(property.first)) });
 		}
+			
 		vs_output.push_back({ "SV_Position", "sv_position", "float4" });
-		vs_output.push_back({ "SV_InstanceID", "instance_id", "uint" });
+		vs_output.push_back({ "SV_InstanceID", "index", "uint" });
 
 		for (size_t index = 0; index < status.output.formats.size(); index++)
 			fs_output.push_back({
@@ -286,20 +312,49 @@ namespace workflows::rendering {
 				to_string(status.output.formats[index])
 			});
 
-		creator.define_structure(user_defined_data, "UserDefinedData");
 		creator.define_structure(vs_output, "VSOutput");
 		creator.define_structure(fs_output, "FSOutput");
 		creator.define_structure(vs_input, "VSInput");
 
-		creator.define_constant_buffer("UserDefinedData", "user_defined_data", 0, 0);
-		creator.define_structured_buffer("Transform", "transforms", 1, 0);
+		creator.define_structured_buffer("TransformComponent", "transforms", 1, 0);
 
 		creator.begin_function({ {"", "input", "VSInput"} }, "VSOutput", "vs_main");
 		creator.define_variable("VSOutput", "output");
+
+		creator.add_sentence("output.index = input.index;");
+
+		creator.add_sentence("output.sv_position = mul(float4(input.Position, 1.f), transforms[input.index].local_to_world);");
+
+		if (status.output.mappings.find("PositionWorldSpace") != status.output.mappings.end())
+			creator.add_sentence("output.PositionWorldSpace = output.sv_position.xyz;");
+		
+		creator.add_sentence("output.sv_position = mul(output.sv_position, transforms[input.index].world_to_camera);");
+
+		if (status.output.mappings.find("PositionCameraSpace") != status.output.mappings.end())
+			creator.add_sentence("output.PositionCameraSpace = output.sv_position.xyz;");
+		
+		creator.add_sentence("output.sv_position = mul(output.sv_position, transforms[input.index].camera_to_proj);");
+
+		if (status.output.mappings.find("Texcoord") != status.output.mappings.end())
+			creator.add_sentence("output.Texcoord = input.Texcoord;");
+
+		if (status.output.mappings.find("NormalCameraSpace") != status.output.mappings.end() ||
+			status.output.mappings.find("NormalWorldSpace") != status.output.mappings.end())
+			creator.add_sentence("input.Normal = mul(float4(input.Normal, 1.f), transforms[input.index].local_to_world).xyz;");
+
+		if (status.output.mappings.find("NormalWorldSpace") != status.output.mappings.end())
+			creator.add_sentence("output.NormalWorldSpace = input.Normal;");
+
+		if (status.output.mappings.find("NormalCameraSpace") != status.output.mappings.end())
+			creator.add_sentence("output.NormalCameraSpace = mul(float4(input.Normal, 1.f), transforms[input.index].world_to_camera).xyz;");
+
+		creator.add_sentence("return output;");
 		
 		creator.end_function();
 
 		creator.begin_function({ {"", "input", "VSOutput"} }, "FSOutput", "fs_main");
+		creator.define_variable("FSOutput", "output");
+		
 		creator.end_function();
 		
 		return creator.source();

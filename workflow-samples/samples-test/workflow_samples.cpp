@@ -116,15 +116,25 @@ void workflows::samples::SamplesWorkflow::update(float delta)
 {
 	rendering::GBufferWorkflowStatus status;
 
-	status.input.property_from_vertex.push_back({ rendering::GBufferWorkflowBaseType::float3, "Position", 0 });
-	status.input.property_from_vertex.push_back({ rendering::GBufferWorkflowBaseType::float4, "Color", 0 });
+	status.input.properties.push_back({ rendering::GBufferWorkflowBaseType::float3, "Position", 0 });
+	status.input.properties.push_back({ rendering::GBufferWorkflowBaseType::float3, "Texcoord", 0 });
+	status.input.properties.push_back({ rendering::GBufferWorkflowBaseType::float3, "Normal", 0 });
 
-	status.input.property_from_buffer.push_back({ rendering::GBufferWorkflowBaseType::float4, "unknown" });
+	status.output.depth_format = rendering::GBufferWorkflowBaseType::float1;
+	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float3);
+	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float3);
+	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float3);
+	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float3);
+	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float3);
+	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::uint1);
 
-	status.output.depth_format = rendering::GBufferWorkflowBaseType::float4;
-	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float4);
-	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float4);
-
+	status.output.mappings["PositionCameraSpace"] = { 0, 0 };
+	status.output.mappings["PositionWorldSpace"] = { 1, 0 };
+	status.output.mappings["NormalCameraSpace"] = { 2, 0};
+	status.output.mappings["NormalWorldSpace"] = { 3, 0};
+	status.output.mappings["Texcoord"] = { 4, 0};
+	status.output.mappings["Identity"] = { 5, 0};
+	
 	status.device = mDevice;
 	status.enable_depth = true;
 	
