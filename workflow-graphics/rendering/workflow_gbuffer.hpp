@@ -71,19 +71,18 @@ namespace workflows::rendering {
 	
 	/*
 	 * GBufferWorkflowOutputMapping will mapping a property to a texture
-	 * The begin property means the first channel we will use(0, 1, 2, 3)
-	 * The element of property(1, 2, 3, 4) + begin should not grater than 4.
 	 * The which property means which texture the property will output
 	 */
 	struct GBufferWorkflowOutputMapping {
-		uint32 begin = 0;
 		uint32 which = 0;
+
+		GBufferWorkflowOutputMapping() = default;
+		
+		GBufferWorkflowOutputMapping(uint32 which) : which(which) {}
 	};
 
 	struct GBufferWorkflowOutputConfig {
 		std::unordered_map<std::string, GBufferWorkflowOutputMapping> mappings;
-
-		std::vector<GBufferWorkflowBaseType> formats;
 
 		GBufferWorkflowBaseType depth_format;
 	};
@@ -134,15 +133,19 @@ namespace workflows::rendering {
 	 */
 	struct GBufferWorkflowInput {
 		std::vector<GBufferWorkflowDrawCall> draw_calls;
-		
+
 		std::vector<directx12::buffer> vertex_buffers;
 		
-		std::vector<directx12::texture2d> outputs;
+		std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> outputs;
 
-		directx12::texture2d depth;
+		D3D12_CPU_DESCRIPTOR_HANDLE depth = { 0 };
 
+		directx12::graphics_command_list command_list;
+		
 		directx12::buffer index_buffer;
 		directx12::buffer transform;
+
+		uint32 left = 0, top = 0, right = 0, bottom = 0;
 		
 		uint32 slot = 0;
 	};
@@ -176,6 +179,8 @@ namespace workflows::rendering {
 		
 		directx12::graphics_pipeline_info mGraphicsPipelineInfo;
 		directx12::pipeline_state mGraphicsPipeline;
+
+		uint32 mStrideInBytes = 0;
 	};
 
 	inline DXGI_FORMAT to_dxgi_format(const GBufferWorkflowBaseType& type)
@@ -229,9 +234,7 @@ namespace workflows::rendering {
 
 	inline GBufferWorkflow::GBufferWorkflow(const GBufferWorkflowStatus& status) : mStatus(status)
 	{
-		mRootSignatureInfo
-			.add_shader_resource_view("user_defined_data", 0, 0)
-			.add_shader_resource_view("transforms", 1, 0);
+		mRootSignatureInfo.add_shader_resource_view("transforms", 0, 0);
 		
 		mRootSignature = directx12::root_signature::create(mStatus.device, mRootSignatureInfo);
 		
@@ -239,12 +242,12 @@ namespace workflows::rendering {
 			mInputAssemblyInfo.add_input_element(
 				input_property.name, to_dxgi_format(input_property.type), 
 				input_property.slot);
+
+			mStrideInBytes += static_cast<uint32>(directx12::size_of(to_dxgi_format(input_property.type)));
 		}
 
 		const auto shader = initialize_shaders_for_workflow(mStatus);
 
-		printf("%s\n", shader.c_str());
-		
 		mVertShader = directx12::shader_code::create_from_source(shader, "vs_main", "vs_5_1");
 		mFragShader = directx12::shader_code::create_from_source(shader, "fs_main", "ps_5_1");
 		
@@ -254,14 +257,16 @@ namespace workflows::rendering {
 
 		mDepthStencilInfo.set_depth_enable(mStatus.enable_depth);
 
-		std::vector<DXGI_FORMAT> formats(mStatus.output.formats.size());
+		std::vector<DXGI_FORMAT> formats(mStatus.output.mappings.size());
 
-		for (size_t index = 0; index < mStatus.output.formats.size(); index++)
-			formats[index] = to_dxgi_format(mStatus.output.formats[index]);
+		for (const auto& mapping : mStatus.output.mappings)
+			formats[mapping.second.which] = to_dxgi_format(get_type_by_name(mapping.first));
 		
 		mGraphicsPipelineInfo
 			.set_format(formats, to_dxgi_format(mStatus.output.depth_format))
 			.set_primitive_type(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE)
+			.set_vert_shader(mVertShader)
+			.set_frag_shader(mFragShader)
 			.set_root_signature(mRootSignature)
 			.set_input_assembly(mInputAssemblyInfo)
 			.set_rasterization(mRasterizationInfo)
@@ -274,6 +279,56 @@ namespace workflows::rendering {
 	inline StatusWorkflow<GBufferWorkflowInput, GBufferWorkflowOutput, GBufferWorkflowStatus>::output_type
 		GBufferWorkflow::start(const input_type& input)
 	{
+		std::vector<D3D12_VERTEX_BUFFER_VIEW> views(input.vertex_buffers.size());
+
+		for (size_t index = 0; index < views.size(); index++)
+			views[index] = directx12::resource_view::vertex_buffer(
+				input.vertex_buffers[index], mStrideInBytes,
+				input.vertex_buffers[index].size_in_bytes());
+		
+		auto& command_list = input.command_list;
+
+		command_list->SetPipelineState(mGraphicsPipeline.get());
+		command_list->SetGraphicsRootSignature(mRootSignature.get());
+
+		if (input.depth.ptr != 0)
+			command_list.set_render_targets(input.outputs, input.depth);
+		else
+			command_list.set_render_targets(input.outputs);
+
+		command_list.set_view_ports({
+			{
+				static_cast<float>(input.left),
+				static_cast<float>(input.top),
+				static_cast<float>(input.right - input.left),
+				static_cast<float>(input.bottom - input.top),
+				0.f, 1.f
+			}});
+
+		command_list.set_scissor_rects({
+			{
+				static_cast<LONG>(input.left), static_cast<LONG>(input.top),
+				static_cast<LONG>(input.right), static_cast<LONG>(input.bottom)
+			}});
+		
+		command_list.set_vertex_buffers(views, input.slot);
+		command_list.set_index_buffer(directx12::resource_view::index_buffer(
+			input.index_buffer, DXGI_FORMAT_R32_UINT,
+			input.index_buffer.size_in_bytes()));
+
+		command_list->SetGraphicsRootShaderResourceView(
+			static_cast<uint32>(mRootSignatureInfo.index("transforms")), 
+			input.transform->GetGPUVirtualAddress());
+
+		uint32 index = 0;
+		
+		for (const auto& draw_call : input.draw_calls) {
+			command_list->DrawIndexedInstanced(draw_call.index_count, draw_call.instance_count,
+				draw_call.index_location, 0, index);
+
+			index += draw_call.instance_count;
+		}
+
 		return {};
 	}
 
@@ -305,18 +360,20 @@ namespace workflows::rendering {
 		vs_output.push_back({ "SV_Position", "sv_position", "float4" });
 		vs_output.push_back({ "SV_InstanceID", "index", "uint" });
 
-		for (size_t index = 0; index < status.output.formats.size(); index++)
-			fs_output.push_back({
-				"SV_Target" + std::to_string(index),
-				"color" + std::to_string(index),
-				to_string(status.output.formats[index])
-			});
+		fs_output.resize(status.output.mappings.size());
+
+		for (const auto& mapping : status.output.mappings)
+			fs_output[mapping.second.which] = {
+				"SV_Target" + std::to_string(mapping.second.which),
+				"output" + std::to_string(mapping.second.which),
+				to_string(get_type_by_name(mapping.first))
+			};
 
 		creator.define_structure(vs_output, "VSOutput");
 		creator.define_structure(fs_output, "FSOutput");
 		creator.define_structure(vs_input, "VSInput");
 
-		creator.define_structured_buffer("TransformComponent", "transforms", 1, 0);
+		creator.define_structured_buffer("TransformComponent", "transforms", 0, 0);
 
 		creator.begin_function({ {"", "input", "VSInput"} }, "VSOutput", "vs_main");
 		creator.define_variable("VSOutput", "output");
@@ -354,6 +411,17 @@ namespace workflows::rendering {
 
 		creator.begin_function({ {"", "input", "VSOutput"} }, "FSOutput", "fs_main");
 		creator.define_variable("FSOutput", "output");
+
+		for (const auto& mapping : status.output.mappings) {
+			if (mapping.first == "Identity") continue;
+			
+			creator.add_sentence("output.output" + std::to_string(mapping.second.which) + " = input." + mapping.first + ";");
+		}
+
+		if (status.output.mappings.find("Identity") != status.output.mappings.end())
+			creator.add_sentence("output.output" + std::to_string(status.output.mappings.at("Identity").which) + " = input.index;");
+
+		creator.add_sentence("return output;");
 		
 		creator.end_function();
 		

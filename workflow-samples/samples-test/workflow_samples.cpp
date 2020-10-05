@@ -114,32 +114,6 @@ workflows::cores::null workflows::samples::SamplesWorkflow::start(const null& in
 
 void workflows::samples::SamplesWorkflow::update(float delta)
 {
-	rendering::GBufferWorkflowStatus status;
-
-	status.input.properties.push_back({ rendering::GBufferWorkflowBaseType::float3, "Position", 0 });
-	status.input.properties.push_back({ rendering::GBufferWorkflowBaseType::float3, "Texcoord", 0 });
-	status.input.properties.push_back({ rendering::GBufferWorkflowBaseType::float3, "Normal", 0 });
-
-	status.output.depth_format = rendering::GBufferWorkflowBaseType::float1;
-	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float3);
-	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float3);
-	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float3);
-	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float3);
-	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::float3);
-	status.output.formats.push_back(rendering::GBufferWorkflowBaseType::uint1);
-
-	status.output.mappings["PositionCameraSpace"] = { 0, 0 };
-	status.output.mappings["PositionWorldSpace"] = { 1, 0 };
-	status.output.mappings["NormalCameraSpace"] = { 2, 0};
-	status.output.mappings["NormalWorldSpace"] = { 3, 0};
-	status.output.mappings["Texcoord"] = { 4, 0};
-	status.output.mappings["Identity"] = { 5, 0};
-	
-	status.device = mDevice;
-	status.enable_depth = true;
-	
-	rendering::GBufferWorkflow gbuffer(status);
-	
 	directx12::extensions::imgui_context::new_frame();
 	ImGui::NewFrame();
 }
@@ -245,4 +219,24 @@ void workflows::samples::SamplesWorkflow::initialize_graphics_components()
 	line_workflow_status.format = mSwapChain.format();
 	
 	mLineWorkflow = std::make_shared<rendering::LineWorkflow>(line_workflow_status);
+
+	rendering::GBufferWorkflowStatus status;
+
+	status.input.properties.push_back({ rendering::GBufferWorkflowBaseType::float3, "Position", 0 });
+	status.input.properties.push_back({ rendering::GBufferWorkflowBaseType::float3, "Texcoord", 0 });
+	status.input.properties.push_back({ rendering::GBufferWorkflowBaseType::float3, "Normal", 0 });
+
+	status.output.depth_format = rendering::GBufferWorkflowBaseType::float1;
+
+	status.output.mappings["PositionCameraSpace"] = 0;
+	status.output.mappings["PositionWorldSpace"] = 1;
+	status.output.mappings["NormalCameraSpace"] = 2;
+	status.output.mappings["NormalWorldSpace"] = 3;
+	status.output.mappings["Texcoord"] = 4;
+	status.output.mappings["Identity"] = 5;
+
+	status.device = mDevice;
+	status.enable_depth = true;
+
+	rendering::GBufferWorkflow gbuffer(status);
 }
