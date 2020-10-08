@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "references", "references", "{F377D545-B34D-447C-8185-7C50D647D5AB}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "directx12-wrapper", "references\directx-wrapper\directx12-wrapper\directx12-wrapper.vcxproj", "{79DF4B1F-8673-4153-BB01-87BDE91D8642}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow-graphics", "workflow-graphics", "{54C0CC5B-EA99-4F6C-874A-3000AAF96956}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "workflow-graphics", "workflow-graphics\workflow-graphics.vcxproj", "{68B5424E-E21B-47BE-856A-64974B046630}"
@@ -19,14 +15,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{79DF4B1F-8673-4153-BB01-87BDE91D8642}.Debug|x64.ActiveCfg = Debug|x64
-		{79DF4B1F-8673-4153-BB01-87BDE91D8642}.Debug|x64.Build.0 = Debug|x64
-		{79DF4B1F-8673-4153-BB01-87BDE91D8642}.Debug|x86.ActiveCfg = Debug|Win32
-		{79DF4B1F-8673-4153-BB01-87BDE91D8642}.Debug|x86.Build.0 = Debug|Win32
-		{79DF4B1F-8673-4153-BB01-87BDE91D8642}.Release|x64.ActiveCfg = Release|x64
-		{79DF4B1F-8673-4153-BB01-87BDE91D8642}.Release|x64.Build.0 = Release|x64
-		{79DF4B1F-8673-4153-BB01-87BDE91D8642}.Release|x86.ActiveCfg = Release|Win32
-		{79DF4B1F-8673-4153-BB01-87BDE91D8642}.Release|x86.Build.0 = Release|Win32
 		{68B5424E-E21B-47BE-856A-64974B046630}.Debug|x64.ActiveCfg = Debug|x64
 		{68B5424E-E21B-47BE-856A-64974B046630}.Debug|x64.Build.0 = Debug|x64
 		{68B5424E-E21B-47BE-856A-64974B046630}.Debug|x86.ActiveCfg = Debug|Win32
@@ -40,7 +28,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{79DF4B1F-8673-4153-BB01-87BDE91D8642} = {F377D545-B34D-447C-8185-7C50D647D5AB}
 		{68B5424E-E21B-47BE-856A-64974B046630} = {54C0CC5B-EA99-4F6C-874A-3000AAF96956}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
