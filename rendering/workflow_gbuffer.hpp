@@ -1,9 +1,9 @@
 #pragma once
 
-#include <directx-wrapper/descriptors/root_signature.hpp>
-#include <directx-wrapper/pipelines/pipeline_state.hpp>
-#include <directx-wrapper/shaders/shader_creator.hpp>
-#include <directx-wrapper/resources/texture2d.hpp>
+#include <directx12-wrapper/descriptors/root_signature.hpp>
+#include <directx12-wrapper/pipelines/pipeline_state.hpp>
+#include <directx12-wrapper/shaders/shader_creator.hpp>
+#include <directx12-wrapper/resources/texture2d.hpp>
 
 #include "../cores/workflow_status.hpp"
 

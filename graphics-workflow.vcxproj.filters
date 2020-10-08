@@ -33,6 +33,7 @@
     <ClInclude Include="resources\workflow_shaders_file.hpp">
       <Filter>resources</Filter>
     </ClInclude>
+    <ClInclude Include="workflow_copy.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\generate_shaders.json">
@@ -44,5 +45,8 @@
     <None Include="resources\shaders\workflow_line.hlsl">
       <Filter>resources\shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="workflow_build.cpp" />
   </ItemGroup>
 </Project>

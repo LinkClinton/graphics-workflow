@@ -173,6 +173,7 @@
     <ClInclude Include="rendering\workflow_gbuffer.hpp" />
     <ClInclude Include="rendering\workflow_line.hpp" />
     <ClInclude Include="resources\workflow_shaders_file.hpp" />
+    <ClInclude Include="workflow_copy.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\fix_resharper_error.hlsl">
@@ -184,6 +185,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\generate_shaders.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="workflow_build.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
