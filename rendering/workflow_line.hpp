@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../../references/directx-wrapper/directx12-wrapper/descriptors/root_signature.hpp"
-#include "../../references/directx-wrapper/directx12-wrapper/descriptors/descriptor_heap.hpp"
-#include "../../references/directx-wrapper/directx12-wrapper/pipelines/pipeline_state.hpp"
-#include "../../references/directx-wrapper/directx12-wrapper/resources/texture2d.hpp"
-#include "../../references/directx-wrapper/directx12-wrapper/enums/pixel_format.hpp"
+#include <directx-wrapper/descriptors/descriptor_heap.hpp>
+#include <directx-wrapper/descriptors/root_signature.hpp>
+#include <directx-wrapper/pipelines/pipeline_state.hpp>
+#include <directx-wrapper/resources/texture2d.hpp>
+#include <directx-wrapper/enums/pixel_format.hpp>
 
 #include "../resources/workflow_shaders_file.hpp"
 #include "../cores/workflow_status.hpp"
