@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../references/directx-wrapper/directx12-wrapper/resources/texture2d.hpp"
-#include "../references/directx-wrapper/directx12-wrapper/resources/buffer.hpp"
+#include <directx-wrapper/directx12-wrapper/resources/texture2d.hpp>
+#include <directx-wrapper/directx12-wrapper/resources/buffer.hpp>
 
 #include "cores/workflow_independent.hpp"
 

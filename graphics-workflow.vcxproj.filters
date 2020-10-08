@@ -2,19 +2,22 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="cores">
-      <UniqueIdentifier>{82049ac1-92bb-430c-8b0e-d747ac79f7a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="rendering">
-      <UniqueIdentifier>{f27ea41c-88f8-475e-9671-fbc5c3b2dc03}</UniqueIdentifier>
+      <UniqueIdentifier>{860efb35-ba51-4c77-b67e-fb4d9f092f57}</UniqueIdentifier>
     </Filter>
     <Filter Include="resources">
-      <UniqueIdentifier>{d0ddca26-bfc0-4987-ade4-18690bfeb3e3}</UniqueIdentifier>
+      <UniqueIdentifier>{729afb32-a7cd-405b-8ace-1637ccaed065}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rendering">
+      <UniqueIdentifier>{404bf128-febb-4d0c-953c-9b802ea90489}</UniqueIdentifier>
     </Filter>
     <Filter Include="resources\shaders">
-      <UniqueIdentifier>{e6c671e5-25b9-404c-bae8-8ce4f96b30bb}</UniqueIdentifier>
+      <UniqueIdentifier>{c49229db-c335-400a-aead-d329c604ae54}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cores\workflow.hpp">
+      <Filter>cores</Filter>
+    </ClInclude>
     <ClInclude Include="cores\workflow_independent.hpp">
       <Filter>cores</Filter>
     </ClInclude>
@@ -24,26 +27,22 @@
     <ClInclude Include="rendering\workflow_gbuffer.hpp">
       <Filter>rendering</Filter>
     </ClInclude>
-    <ClInclude Include="workflow_copy.hpp" />
     <ClInclude Include="rendering\workflow_line.hpp">
       <Filter>rendering</Filter>
     </ClInclude>
     <ClInclude Include="resources\workflow_shaders_file.hpp">
       <Filter>resources</Filter>
     </ClInclude>
-    <ClInclude Include="cores\workflow.hpp">
-      <Filter>cores</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\shaders\workflow_line.hlsl">
-      <Filter>resources\shaders</Filter>
+    <None Include="resources\generate_shaders.json">
+      <Filter>resources</Filter>
     </None>
     <None Include="resources\shaders\fix_resharper_error.hlsl">
       <Filter>resources\shaders</Filter>
     </None>
-    <None Include="resources\generate_shaders.json">
-      <Filter>resources</Filter>
+    <None Include="resources\shaders\workflow_line.hlsl">
+      <Filter>resources\shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

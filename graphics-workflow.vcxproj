@@ -18,31 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="cores\workflow.hpp" />
-    <ClInclude Include="cores\workflow_independent.hpp" />
-    <ClInclude Include="cores\workflow_status.hpp" />
-    <ClInclude Include="rendering\workflow_gbuffer.hpp" />
-    <ClInclude Include="rendering\workflow_line.hpp" />
-    <ClInclude Include="resources\workflow_shaders_file.hpp" />
-    <ClInclude Include="workflow_copy.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="resources\generate_shaders.json" />
-    <None Include="resources\shaders\fix_resharper_error.hlsl">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="resources\shaders\workflow_line.hlsl">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{68b5424e-e21b-47be-856a-64974b046630}</ProjectGuid>
-    <RootNamespace>workflowgraphics</RootNamespace>
+    <ProjectGuid>{48a87e05-8ba3-45fb-a9a4-321032bd62ca}</ProjectGuid>
+    <RootNamespace>graphicsworkflow</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -182,6 +162,25 @@
       <Command>cs2h.exe ./resources/generate_shaders.json</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="cores\workflow.hpp" />
+    <ClInclude Include="cores\workflow_independent.hpp" />
+    <ClInclude Include="cores\workflow_status.hpp" />
+    <ClInclude Include="rendering\workflow_gbuffer.hpp" />
+    <ClInclude Include="rendering\workflow_line.hpp" />
+    <ClInclude Include="resources\workflow_shaders_file.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\fix_resharper_error.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="resources\shaders\workflow_line.hlsl">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\generate_shaders.json" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
