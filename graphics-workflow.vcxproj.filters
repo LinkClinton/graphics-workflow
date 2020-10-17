@@ -13,6 +13,9 @@
     <Filter Include="resources\shaders">
       <UniqueIdentifier>{c49229db-c335-400a-aead-d329c604ae54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="clipping">
+      <UniqueIdentifier>{3316585b-b93d-4a2d-bdf5-2be63219252f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cores\workflow.hpp">
@@ -34,6 +37,9 @@
       <Filter>resources</Filter>
     </ClInclude>
     <ClInclude Include="workflow_copy.hpp" />
+    <ClInclude Include="clipping\workflow_clipping_liang_barsky.hpp">
+      <Filter>clipping</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\generate_shaders.json">

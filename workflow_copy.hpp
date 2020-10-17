@@ -2,11 +2,8 @@
 
 #include <directx12-wrapper/resources/texture2d.hpp>
 #include <directx12-wrapper/resources/buffer.hpp>
-#include <directx12-wrapper/resources/buffer.hpp>
 
 #include "cores/workflow_independent.hpp"
-
-using namespace wrapper;
 
 namespace workflows {
 
@@ -24,7 +21,7 @@ namespace workflows {
 
 	template <>
 	struct CopyWorkflowInput<CpuMemory, GpuUpload> {
-		directx12::buffer upload;
+		wrapper::directx12::buffer upload;
 
 		size_t size_in_bytes = 0;
 
@@ -33,16 +30,16 @@ namespace workflows {
 
 	template <>
 	struct CopyWorkflowInput<GpuUpload, GpuTexture2D> {
-		directx12::graphics_command_list command_list;
-		directx12::texture2d destination;
-		directx12::buffer source;
+		wrapper::directx12::graphics_command_list command_list;
+		wrapper::directx12::texture2d destination;
+		wrapper::directx12::buffer source;
 	};
 
 	template <>
 	struct CopyWorkflowInput<CpuMemory, GpuTexture2D> {
-		directx12::graphics_command_list command_list;
-		directx12::texture2d destination;
-		directx12::buffer upload;
+		wrapper::directx12::graphics_command_list command_list;
+		wrapper::directx12::texture2d destination;
+		wrapper::directx12::buffer upload;
 		
 		size_t size_in_bytes = 0;
 		
@@ -103,7 +100,7 @@ namespace workflows {
 		assert(input.upload.size_in_bytes() >= input.size_in_bytes);
 
 		const auto logic_width = input.destination.width() *
-			directx12::size_of(input.destination.format());
+			wrapper::directx12::size_of(input.destination.format());
 
 		if (input.destination.alignment() == logic_width)
 			input.upload.copy_from_cpu(input.data, input.size_in_bytes);

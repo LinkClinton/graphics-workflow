@@ -11,8 +11,6 @@
 
 #include <vector>
 
-using namespace wrapper;
-
 namespace workflows::rendering {
 
 	using namespace cores;
@@ -25,16 +23,16 @@ namespace workflows::rendering {
 	};
 
 	struct LineWorkflowStatus {
-		directx12::pixel_format format;
-		directx12::device device;
+		wrapper::directx12::pixel_format format;
+		wrapper::directx12::device device;
 	};
 	
 	struct LineWorkflowInput {
 		std::vector<LineWorkflowDrawCall> lines;
 
-		directx12::graphics_command_list command_list;
-		directx12::descriptor_heap descriptor_heap;
-		directx12::texture2d render_target;
+		wrapper::directx12::graphics_command_list command_list;
+		wrapper::directx12::descriptor_heap descriptor_heap;
+		wrapper::directx12::texture2d render_target;
 
 		matrix4x4 view_matrix;
 		
@@ -42,7 +40,7 @@ namespace workflows::rendering {
 	};
 
 	struct LineWorkflowOutput {
-		directx12::texture2d render_target;
+		wrapper::directx12::texture2d render_target;
 	};
 
 	using LWStatus = LineWorkflowStatus;
@@ -59,21 +57,21 @@ namespace workflows::rendering {
 	private:
 		LineWorkflowStatus mStatus;
 
-		directx12::root_signature_info mRootSignatureInfo;
-		directx12::root_signature mRootSignature;
-
-		directx12::input_assembly_info mInputAssemblyInfo;
-		directx12::rasterization_info mRasterizationInfo;
-		directx12::depth_stencil_info mDepthStencilInfo;
-		directx12::blend_info mBlendInfo;
-
-		directx12::graphics_pipeline_info mGraphicsPipelineInfo;
-		directx12::pipeline_state mGraphicsPipeline;
+		wrapper::directx12::root_signature_info mRootSignatureInfo;
+		wrapper::directx12::root_signature mRootSignature;
 		
-		directx12::shader_code mVertShader;
-		directx12::shader_code mFragShader;
+		wrapper::directx12::input_assembly_info mInputAssemblyInfo;
+		wrapper::directx12::rasterization_info mRasterizationInfo;
+		wrapper::directx12::depth_stencil_info mDepthStencilInfo;
+		wrapper::directx12::blend_info mBlendInfo;
 
-		directx12::buffer mVertexBuffer;
+		wrapper::directx12::graphics_pipeline_info mGraphicsPipelineInfo;
+		wrapper::directx12::pipeline_state mGraphicsPipeline;
+		
+		wrapper::directx12::shader_code mVertShader;
+		wrapper::directx12::shader_code mFragShader;
+
+		wrapper::directx12::buffer mVertexBuffer;
 	};
 
 	inline LineWorkflow::LineWorkflow(const LineWorkflowStatus& status) :
@@ -81,10 +79,10 @@ namespace workflows::rendering {
 	{
 		mRootSignatureInfo.add_constants("view_matrix", 0, 0, 16);
 
-		mRootSignature = directx12::root_signature::create(mStatus.device, mRootSignatureInfo);
+		mRootSignature = wrapper::directx12::root_signature::create(mStatus.device, mRootSignatureInfo);
 
-		mVertShader = directx12::shader_code::create(shaders::workflow_line_vert_shader);
-		mFragShader = directx12::shader_code::create(shaders::workflow_line_frag_shader);
+		mVertShader = wrapper::directx12::shader_code::create(shaders::workflow_line_vert_shader);
+		mFragShader = wrapper::directx12::shader_code::create(shaders::workflow_line_frag_shader);
 		
 		mInputAssemblyInfo
 			.add_input_element("POSITION", DXGI_FORMAT_R32G32B32_FLOAT)
@@ -107,9 +105,9 @@ namespace workflows::rendering {
 			.set_blend(mBlendInfo)
 			.set_format({ mStatus.format });
 
-		mGraphicsPipeline = directx12::pipeline_state::create(mStatus.device, mGraphicsPipelineInfo);
+		mGraphicsPipeline = wrapper::directx12::pipeline_state::create(mStatus.device, mGraphicsPipelineInfo);
 
-		mVertexBuffer = directx12::buffer();
+		mVertexBuffer = wrapper::directx12::buffer();
 	}
 
 	inline StatusWorkflow<LineWorkflowInput, LineWorkflowOutput, LineWorkflowStatus>::output_type LineWorkflow::start(
@@ -121,8 +119,8 @@ namespace workflows::rendering {
 		const auto size_of_lines = input.lines.size() * 2 * 7 * 4;
 
 		if (mVertexBuffer.size_in_bytes() < size_of_lines) {
-			mVertexBuffer = directx12::buffer::create(mStatus.device,
-				directx12::resource_info::upload(), size_of_lines);
+			mVertexBuffer = wrapper::directx12::buffer::create(mStatus.device,
+				wrapper::directx12::resource_info::upload(), size_of_lines);
 		}
 
 		struct LineVertex { vector3 position; vector4 color; };
@@ -145,7 +143,7 @@ namespace workflows::rendering {
 		
 		command_list.set_render_targets({ input.descriptor_heap.cpu_handle(input.which) });
 		command_list.set_vertex_buffers({ 
-			directx12::resource_view::vertex_buffer(mVertexBuffer, 7 * 4, size_of_lines)
+			wrapper::directx12::resource_view::vertex_buffer(mVertexBuffer, 7 * 4, size_of_lines)
 		});
 
 		command_list.set_view_ports({
