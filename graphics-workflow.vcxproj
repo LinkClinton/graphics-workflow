@@ -168,6 +168,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="clipping\workflow_clipping_liang_barsky.hpp" />
+    <ClInclude Include="clipping\workflow_clipping_sutherland_hodgman.hpp" />
     <ClInclude Include="cores\workflow.hpp" />
     <ClInclude Include="cores\workflow_independent.hpp" />
     <ClInclude Include="cores\workflow_status.hpp" />
