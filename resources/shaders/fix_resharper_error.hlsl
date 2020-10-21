@@ -14,6 +14,7 @@
 #define SV_RayPayload
 #define SV_POSITION
 #define SV_TARGET
+#define SV_InstanceID
 
 #define POSITION
 #define COLOR

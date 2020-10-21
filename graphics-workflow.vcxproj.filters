@@ -43,6 +43,9 @@
     <ClInclude Include="clipping\workflow_clipping_sutherland_hodgman.hpp">
       <Filter>clipping</Filter>
     </ClInclude>
+    <ClInclude Include="rendering\workflow_wireframe.hpp">
+      <Filter>rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\generate_shaders.json">
@@ -57,5 +60,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="workflow_build.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="resources\shaders\workflow_wireframe.hlsl">
+      <Filter>resources\shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
