@@ -84,14 +84,10 @@ namespace workflows::clipping {
 
 				if (!inside(next_vertex, type, value))
 					ret.push_back(intersect(this_vertex, next_vertex, type, value));
-				else
-					ret.push_back(next_vertex);
 			}
 			else {
-				if (inside(next_vertex, type, value)) {
+				if (inside(next_vertex, type, value)) 
 					ret.push_back(intersect(this_vertex, next_vertex, type, value));
-					ret.push_back(next_vertex);
-				}
 			}
 		}
 

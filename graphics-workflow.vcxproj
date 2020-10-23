@@ -176,6 +176,7 @@
     <ClInclude Include="cores\workflow.hpp" />
     <ClInclude Include="cores\workflow_independent.hpp" />
     <ClInclude Include="cores\workflow_status.hpp" />
+    <ClInclude Include="rendering\workflow_filling_scanline.hpp" />
     <ClInclude Include="rendering\workflow_gbuffer.hpp" />
     <ClInclude Include="rendering\workflow_line.hpp" />
     <ClInclude Include="rendering\workflow_wireframe.hpp" />

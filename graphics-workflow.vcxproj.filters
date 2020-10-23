@@ -46,6 +46,9 @@
     <ClInclude Include="rendering\workflow_wireframe.hpp">
       <Filter>rendering</Filter>
     </ClInclude>
+    <ClInclude Include="rendering\workflow_filling_scanline.hpp">
+      <Filter>rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\generate_shaders.json">
@@ -57,13 +60,11 @@
     <None Include="resources\shaders\workflow_line.hlsl">
       <Filter>resources\shaders</Filter>
     </None>
+    <None Include="resources\shaders\workflow_wireframe.hlsl">
+      <Filter>resources\shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="workflow_build.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="resources\shaders\workflow_wireframe.hlsl">
-      <Filter>resources\shaders</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>
