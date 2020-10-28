@@ -176,6 +176,7 @@
     <ClInclude Include="cores\workflow.hpp" />
     <ClInclude Include="cores\workflow_independent.hpp" />
     <ClInclude Include="cores\workflow_status.hpp" />
+    <ClInclude Include="rendering\workflow_filled_circle.hpp" />
     <ClInclude Include="rendering\workflow_filling_scanline.hpp" />
     <ClInclude Include="rendering\workflow_gbuffer.hpp" />
     <ClInclude Include="rendering\workflow_line.hpp" />
@@ -199,6 +200,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\workflow_wireframe.hlsl">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\workflow_filled_circle.hlsl">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

@@ -49,6 +49,9 @@
     <ClInclude Include="rendering\workflow_filling_scanline.hpp">
       <Filter>rendering</Filter>
     </ClInclude>
+    <ClInclude Include="rendering\workflow_filled_circle.hpp">
+      <Filter>rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\generate_shaders.json">
@@ -66,5 +69,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="workflow_build.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="resources\shaders\workflow_filled_circle.hlsl">
+      <Filter>resources\shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
