@@ -43,7 +43,7 @@ namespace workflows {
 		
 		size_t size_in_bytes = 0;
 		
-		void* data = nullptr;
+		const void* data = nullptr;
 	};
 
 	template <>
@@ -106,7 +106,7 @@ namespace workflows {
 			input.upload.copy_from_cpu(input.data, input.size_in_bytes);
 		else {
 			const auto upload_memory = static_cast<byte*>(input.upload.begin_mapping());
-			const auto cpu_memory = static_cast<byte*>(input.data);
+			const auto cpu_memory = static_cast<const byte*>(input.data);
 			const auto alignment = input.destination.alignment();
 
 			for (size_t y = 0; y < input.destination.height(); y++) {

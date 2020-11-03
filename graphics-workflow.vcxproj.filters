@@ -69,14 +69,12 @@
     <None Include="resources\shaders\workflow_wireframe.hlsl">
       <Filter>resources\shaders</Filter>
     </None>
-    <None Include="resources\shaders\workflow_filled_circle.hlsl" />
+    <None Include="resources\shaders\workflow_geodesic.hlsl" />
+    <None Include="resources\shaders\workflow_filled_circle.hlsl">
+      <Filter>resources\shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="workflow_build.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="resources\shaders\workflow_geodesic.hlsl">
-      <Filter>resources\shaders</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>

@@ -24,11 +24,15 @@ struct shader_distances {
 
 SHADER_STRUCTURED_BUFFER_DEFINE(shader_transforms, transforms, t0, space0);
 SHADER_STRUCTURED_BUFFER_DEFINE(shader_distances, distances, t1, space0);
+SHADER_RESOURCE_DEFINE(Texture2D, color_bar, t2, space0);
+SHADER_RESOURCE_DEFINE(SamplerState, sampler0, s3, space0);
+
 SHADER_CONSTANT_BUFFER_DEFINE(shader_config, config, b0, space1);
 
 vs_output vs_main(
 	SYSTEM_VALUE(float3, position, POSITION),
-	SYSTEM_VALUE(uint, identity, SV_InstanceID))
+	SYSTEM_VALUE(uint, identity, SV_InstanceID),
+	SYSTEM_VALUE(uint, vertex, SV_VertexID))
 {
 	vs_output output;
 
@@ -36,7 +40,7 @@ vs_output vs_main(
 	output.position = mul(float4(position, 1), transforms[output.identity].local_to_world);
 	output.position = mul(output.position, config.view_matrix);
 	output.position = mul(output.position, config.proj_matrix);
-	output.color = float4(1, 0, 0, 1);
+	output.color = color_bar.SampleLevel(sampler0, float2(distances[config.distance_location + vertex].distance, 0.5f), 0);
 	
 	return output;
 }

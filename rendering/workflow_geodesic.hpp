@@ -45,6 +45,8 @@ namespace workflows::rendering {
 		wrapper::directx12::cpu_descriptor_handle render_target_view;
 		wrapper::directx12::cpu_descriptor_handle depth_stencil_view;
 
+		wrapper::directx12::descriptor_heap color_bar;
+		
 		wrapper::directx12::buffer positions;
 		wrapper::directx12::buffer indices;
 
@@ -84,6 +86,8 @@ namespace workflows::rendering {
 		wrapper::directx12::depth_stencil_info mDepthStencilInfo;
 		wrapper::directx12::blend_info mBlendInfo;
 
+		wrapper::directx12::descriptor_table mDescriptorTable;
+		
 		wrapper::directx12::graphics_pipeline_info mGraphicsPipelineInfo;
 		wrapper::directx12::pipeline_state mGraphicsPipeline;
 
@@ -93,9 +97,13 @@ namespace workflows::rendering {
 
 	inline GeodesicWorkflow::GeodesicWorkflow(const GeodesicWorkflowStatus& status) : mStatus(status)
 	{
+		mDescriptorTable.add_srv_range({ "color_bar" }, 2, 0);
+
 		mRootSignatureInfo
 			.add_shader_resource_view("transforms", 0, 0)
 			.add_shader_resource_view("distances", 1, 0)
+			.add_descriptor_table("color_bar", mDescriptorTable)
+			.add_static_sampler("sampler", 3, 0)
 			.add_constants("config", 0, 1, 34);
 
 		mRootSignature = wrapper::directx12::root_signature::create(mStatus.device, mRootSignatureInfo);
@@ -153,9 +161,12 @@ namespace workflows::rendering {
 			}
 			});
 
+		command_list.set_descriptor_heaps({ input.color_bar.get() });
+
 		command_list.set_graphics_shader_resource_view(mRootSignatureInfo.index("transforms"), input.transforms);
 		command_list.set_graphics_shader_resource_view(mRootSignatureInfo.index("distances"), input.distances);
-
+		command_list.set_graphics_descriptor_table(mRootSignatureInfo.index("color_bar"), input.color_bar.gpu_handle());
+		
 		command_list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		struct shader_config {
