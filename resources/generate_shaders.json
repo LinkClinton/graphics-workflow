@@ -44,6 +44,20 @@
             "variable": "workflow_filled_circle_frag_shader",
             "version": "ps_5_1",
             "entry": "ps_main"
+        },
+        {
+            "macros": [ { "__HLSL_SHADER__": 1 } ],
+            "filename": "./resources/shaders/workflow_geodesic.hlsl",
+            "variable": "workflow_geodesic_vert_shader",
+            "version": "vs_5_1",
+            "entry": "vs_main"
+        },
+        {
+            "macros": [ { "__HLSL_SHADER__": 1 } ],
+            "filename": "./resources/shaders/workflow_geodesic.hlsl",
+            "variable": "workflow_geodesic_frag_shader",
+            "version": "ps_5_1",
+            "entry": "ps_main"
         }
     ]
 }

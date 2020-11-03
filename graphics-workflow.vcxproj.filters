@@ -52,6 +52,9 @@
     <ClInclude Include="rendering\workflow_filled_circle.hpp">
       <Filter>rendering</Filter>
     </ClInclude>
+    <ClInclude Include="rendering\workflow_geodesic.hpp">
+      <Filter>rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\generate_shaders.json">
@@ -66,12 +69,13 @@
     <None Include="resources\shaders\workflow_wireframe.hlsl">
       <Filter>resources\shaders</Filter>
     </None>
+    <None Include="resources\shaders\workflow_filled_circle.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="workflow_build.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="resources\shaders\workflow_filled_circle.hlsl">
+    <FxCompile Include="resources\shaders\workflow_geodesic.hlsl">
       <Filter>resources\shaders</Filter>
     </FxCompile>
   </ItemGroup>
