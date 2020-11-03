@@ -13,7 +13,7 @@
 namespace workflows::rendering {
 
 	using namespace cores;
-
+	
 	struct WireframeWorkflowDrawCall {
 		uint32 vtx_location = 0;
 		uint32 idx_location = 0;
@@ -30,6 +30,8 @@ namespace workflows::rendering {
 		
 		wrapper::directx12::device device;
 
+		D3D12_CULL_MODE mode = D3D12_CULL_MODE_NONE;
+		
 		WireframeWorkflowStatus() = default;
 	};
 	
@@ -103,7 +105,7 @@ namespace workflows::rendering {
 
 		mRasterizationInfo
 			.set_fill_mode(D3D12_FILL_MODE_WIREFRAME)
-			.set_cull_mode(D3D12_CULL_MODE_NONE);
+			.set_cull_mode(mStatus.mode);
 
 		mGraphicsPipelineInfo
 			.set_primitive_type(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE)
