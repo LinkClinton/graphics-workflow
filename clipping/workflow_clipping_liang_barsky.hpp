@@ -2,6 +2,7 @@
 
 #include "../cores/workflow_independent.hpp"
 
+#include <algorithm>
 #include <vector>
 
 namespace workflows::clipping {
