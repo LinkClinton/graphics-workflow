@@ -82,10 +82,17 @@ namespace workflows::clipping {
 			if (inside(this_vertex, type, value)) {
 				ret.push_back(this_vertex);
 
+				// if next_vertex is inside, we will add it at next time
+				// so we only need to put the intersect point between line and clipping edge
+				// when next_vertex is outside
 				if (!inside(next_vertex, type, value))
 					ret.push_back(intersect(this_vertex, next_vertex, type, value));
 			}
 			else {
+				// because this_vertex is outside, we do not add the outside next_vertex
+				// and we do not need add outside this_vertex
+				// we only need to put the intersect point between line and clipping edge
+				// when next_vertex is inside
 				if (inside(next_vertex, type, value)) 
 					ret.push_back(intersect(this_vertex, next_vertex, type, value));
 			}
