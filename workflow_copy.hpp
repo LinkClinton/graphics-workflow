@@ -85,7 +85,7 @@ namespace workflows {
 	inline CopyWorkflow<GpuUpload, GpuTexture2D>::output_type CopyWorkflow<GpuUpload, GpuTexture2D>::start(
 		const input_type& input) const
 	{
-		assert(input.source.size_in_bytes() >= input.destination.height() * input.destination.alignment());
+		assert(input.source.size_in_bytes() >= input.destination.size_y() * input.destination.alignment());
 
 		input.destination.copy_from(input.command_list, input.source);
 
@@ -99,7 +99,7 @@ namespace workflows {
 		assert(input.data != nullptr && input.size_in_bytes != 0);
 		assert(input.upload.size_in_bytes() >= input.size_in_bytes);
 
-		const auto logic_width = input.destination.width() *
+		const auto logic_width = input.destination.size_x() *
 			wrapper::directx12::size_of(input.destination.format());
 
 		if (input.destination.alignment() == logic_width)
@@ -109,7 +109,7 @@ namespace workflows {
 			const auto cpu_memory = static_cast<const byte*>(input.data);
 			const auto alignment = input.destination.alignment();
 
-			for (size_t y = 0; y < input.destination.height(); y++) {
+			for (size_t y = 0; y < input.destination.size_y(); y++) {
 				std::memcpy(upload_memory + y * alignment, cpu_memory + y * logic_width,
 					logic_width);
 			}
